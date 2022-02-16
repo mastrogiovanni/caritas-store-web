@@ -1,18 +1,21 @@
 <script>
     import { onMount } from "svelte";
+    import * as moment from 'moment';
     import { orderForTenantAndRequest, upsertOrder } from "./libs/api.orders";
     import { currentRequest } from "./libs/apis.request";
-    import * as moment from 'moment';
     import { loadProducts } from "./libs/apis.products";
-    import TenantList from "../components/TenantList.svelte";
+    import TenantList from "./components/TenantList.svelte";
+    import { session } from "$app/stores";
 
     let orderRequest = undefined;
-    let currentTenant = "620c1909d4d327bdf26083da";
+    let currentTenant = $session.id;
     let orders = [];
     let products = [];
     
     onMount(async () => {
         orderRequest = await currentRequest();
+        // await reloadData();
+        onTenant($session.id);
     })
 
     async function reloadData() {
@@ -61,7 +64,9 @@
 
 <h1>Ordini</h1>
 
+<!--
 <TenantList onTenant={onTenant} />
+-->
 
 <p/>
 

@@ -1,5 +1,5 @@
 <script>
-	import { loadTenant, loadTenants } from '../routes/libs/apis.tenant';
+	import { loadTenant, loadTenants } from '../libs/apis.tenant';
 	import { onMount } from 'svelte';
 
 	export let onTenant = (idTenant) => {};
