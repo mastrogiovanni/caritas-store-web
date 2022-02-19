@@ -15,3 +15,19 @@ export async function allRequests() {
     return await response.json();
 }
 
+export async function newRequest({ from, to, type, notes }) {
+    const response = await fetch(API_ENDPOINT + '/orderrequest', {
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify({
+            from,
+            to,
+            type,
+            notes
+        })
+    });
+    return response.json();
+}

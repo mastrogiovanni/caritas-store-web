@@ -6,6 +6,8 @@
     import { loadProducts } from "./libs/apis.products";
     import TenantList from "./components/TenantList.svelte";
     import { session } from "$app/stores";
+    import OrderList from "./components/OrderList.svelte";
+import Retailer from "./components/Retailer.svelte";
 
     let orderRequest = undefined;
     let currentTenant = $session.id;
@@ -13,15 +15,21 @@
     let products = [];
     
     onMount(async () => {
-        orderRequest = await currentRequest();
-        // await reloadData();
+        // orderRequest = await currentRequest();
         onTenant($session.id);
     })
 
     async function reloadData() {
         if (orderRequest) {
             orders = await orderForTenantAndRequest(currentTenant, orderRequest._id);
-            products = (await loadProducts()).map(item => {
+            products = await loadProducts();
+            // Filter only right based on the order
+            products = products.filter(item => (
+                (item.orderType === orderRequest.type) || 
+                (item.orderType === "all")
+            ));
+
+            products = products.map(item => {
                 const list = orders.filter(order => order.product === item._id)
                 if (list && list.length > 0) {
                     return {
@@ -58,21 +66,31 @@
 
     let needSave = false;
 
-    $: needSave = needsSave();
+    $: {
+        if (products) {
+            needSave = needsSave();   
+        }
+    }
+    
+    function select(req) {
+        console.log(req);
+        orderRequest = req;
+        reloadData();
+    }
 
 </script>
 
 <h1>Ordini</h1>
 
-<!--
-<TenantList onTenant={onTenant} />
--->
+<p/>
+
+<OrderList {select}></OrderList>
 
 <p/>
 
 {#if orderRequest}
 
-    <h2>Ultimo ordine da compilare: {moment(new Date(orderRequest.from)).format("MMM Do")} - {moment(new Date(orderRequest.to)).format("MMM Do")}</h2>
+    <h2>Periodo: {moment(new Date(orderRequest.from)).format("MMM Do")} - {moment(new Date(orderRequest.to)).format("MMM Do")} ({orderRequest.type})</h2>
     {#if orderRequest.notes}    
     <small>{orderRequest.notes}</small>
     {/if}
@@ -86,21 +104,27 @@
         </div>
     </div>
 
-    <table class="table">
+    <table class="table table-striped table-bordered">
         <thead>
             <tr>
-                <th scope="col">#</th>
-                <th>Product</th>
-                <th colspan="2">Quantity</th>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Fornitore</th>
+                <th>Prezzo</th>
+                <th>Unità</th>
+                <th colspan="2">Quantità</th>
             </tr>
         </thead>
         <tbody>
             {#each products as product (product._id)}
                 <tr>
-                    <th scope="row">{product._id}</th>
-                    <td>{product.name}</td>
+                    <td>{product.name || ''}<br/>{product.description || ''}</td>
+                    <td>{product.category}</td>
+                    <td><Retailer id={product.retailer} /></td>
+                    <td>{product.price}</td>
+                    <td>{product.unity}</td>
                     <td>{product.quantity}</td>
-                    <td><input on:change={() => { needSave = needsSave() }} type="text" name={product._id} bind:value={product.newQuantity} ></td>
+                    <td><input style="width: 100%" on:change={() => { needSave = needsSave() }} type="text" name={product._id} bind:value={product.newQuantity} ></td>
                 </tr>
             {/each}
         </tbody>

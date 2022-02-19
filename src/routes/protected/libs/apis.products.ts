@@ -16,7 +16,7 @@ export async function deleteProduct(id) {
     return response.json();
 }
 
-export async function newProduct({ name, description }) {
+export async function newProduct({ name, description, category, retailer, price, unity, orderType }) {
     const response = await fetch(API_ENDPOINT + '/product', {
         headers: {
             Accept: 'application/json',
@@ -25,7 +25,12 @@ export async function newProduct({ name, description }) {
         method: 'POST',
         body: JSON.stringify({
             name,
-            description
+            description,
+            category,
+            idRetailer: retailer,
+            price,
+            unity,
+            orderType
         })
     });
     return response.json();

@@ -4,6 +4,7 @@
 
     function logout() {
         $session = {};
+        localStorage.removeItem("login");
         goto("/login");
     }
 </script>
@@ -33,13 +34,21 @@
                     <a class="nav-link" href="/protected/admin">Admin</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/protected/tenants">Tenants</a>
+                    <a class="nav-link" href="/protected/tenants">Clienti</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/protected/products">Products</a>
+                    <a class="nav-link" href="/protected/retailers">Fornitori</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/protected/requests">Requests</a>
+                    <a class="nav-link" href="/protected/products">Prodotti</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/protected/report-tenant">Report Cliente
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/protected/report-retailer">Report Fornitore
+                    </a>
                 </li>
                 {/if}
 

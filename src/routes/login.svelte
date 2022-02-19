@@ -32,9 +32,18 @@
 				role: res.role,
 				id: res.id
 			};
+			window.localStorage.setItem("login", username);
 			goto('/protected');
 		}
 	}
+
+	onMount(() => {
+		const savedUsername = window.localStorage.getItem("login");
+		if (savedUsername) {
+			username = savedUsername;
+			login();
+		}
+	})
 </script>
 
 <section class="h-100 gradient-form" style="background-color: #eee;">

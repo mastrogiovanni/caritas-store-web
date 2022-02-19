@@ -5,6 +5,11 @@ export async function orderForTenantAndRequest(idTenant, idRequest) {
     return await response.json();
 }
 
+export async function orderForRetailerAndRequest(idRetailer, idRequest) {
+    const response = await fetch(API_ENDPOINT + `/order/retailer/${idRetailer}/request/${idRequest}`);
+    return await response.json();
+}
+
 export async function upsertOrder(idTenant, idRequest, idProduct, quantity) {
     const response = await fetch(API_ENDPOINT + "/order", {
         headers: {

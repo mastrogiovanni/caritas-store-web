@@ -2,9 +2,13 @@
     import { onMount } from "svelte";
     import { allRequests } from "./libs/apis.request";
     import * as moment from 'moment';
+    import TenantList from "./components/TenantList.svelte";
+import ReportPerTenant from "./components/ReportPerTenant.svelte";
 
     let requests = [];
     let selected = -1;
+    let tenant = undefined;
+    let request = undefined;
 
     onMount(async () => {
         requests = await allRequests();
@@ -15,16 +19,13 @@
 
     function select(index) {
         selected = index;
-		// onTenant(tenants[selected]._id);
+        request = requests[selected]._id;
     }
+
 
 </script>
 
-<h1>Order Request</h1>
-
-<p>
-    Qui troviamo un report dei prodotti finora scelti
-</p>
+<h1>Report per Cliente</h1>
 
 <div class="list-group">
 	{#each requests as request, i (request._id)}
@@ -37,10 +38,17 @@
             {moment(new Date(request.from)).format("MMM Do")} 
             - 
             {moment(new Date(request.to)).format("MMM Do")}
+            ({request.type})
+            - {request.notes || ''}
+
 		</a>
 	{/each}
 </div>
 
 <p />
 
+<TenantList onTenant={(id) => { tenant = id }}></TenantList>
+<p/>
+
+<ReportPerTenant idTenant={tenant} idRequest={request}></ReportPerTenant>
 
