@@ -30,6 +30,8 @@
   },
   "type": "module",
   "dependencies": {
-    "moment": "^2.29.1"
+    "moment": "^2.29.1",
+    "svelte-file-dropzone": "^1.0.0-dev.1",
+    "svelte-table": "^0.3.4"
   }
 }

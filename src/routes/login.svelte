@@ -2,50 +2,83 @@
 	import { session } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { login } from './protected/libs/apis.users';
 
 	let username;
 	let password;
 
-	const users = {
-		admin: {
-			password: 'admin',
-			role: 'admin',
-			id: "-"
-		},
-		giacinta: {
-			password: 'giacinta',
-			role: 'tenant',
-			id: "620c1909d4d327bdf26083da"
-		},
-		onofrio: {
-			password: 'onofrio',
-			role: 'tenant',
-			id: "620c33fb93b57ac7da2961fb"
-		}
-	};
-
-	function login() {
-		const res = users[username];
+	async function _login() {
+		const res = await login(username, password);
 		if (res) {
 			$session = {
-				user: username,
-				role: res.role,
-				id: res.id
+				user: res.name,
+				role: username === 'admin' ? 'admin' : 'user',
+				id: res._id
 			};
-			window.localStorage.setItem("login", username);
+			window.localStorage.setItem('login', JSON.stringify(res));
 			goto('/protected');
 		}
 	}
 
 	onMount(() => {
-		const savedUsername = window.localStorage.getItem("login");
+		const savedUsername = window.localStorage.getItem('login');
 		if (savedUsername) {
-			username = savedUsername;
-			login();
+			const res = JSON.parse(savedUsername);
+			username = res.username;
+			password = res.password;
+			_login();
 		}
-	})
+	});
 </script>
 
+<section class="vh-100">
+	<div class="container py-5 h-100">
+		<div class="row d-flex justify-content-center align-items-center h-100">
+			<div class="col-12 col-md-8 col-lg-6 col-xl-5">
+				<div class="card shadow-2-strong" style="border-radius: 1rem;">
+					<div class="card-body p-5 text-center">
+						<h3 class="mb-5">Sign in</h3>
+
+						<div class="form-outline mb-4">
+							<input bind:value={username} type="text" id="typeEmailX-2" class="form-control form-control-lg" />
+							<label class="form-label" for="typeEmailX-2">Username</label>
+						</div>
+
+						<div class="form-outline mb-4">
+							<input bind:value={password} type="password" id="typePasswordX-2" class="form-control form-control-lg" />
+							<label class="form-label" for="typePasswordX-2">Password</label>
+						</div>
+
+						<!-- Checkbox -->
+						<!--
+			  <div class="form-check d-flex justify-content-start mb-4">
+				<input
+				  class="form-check-input"
+				  type="checkbox"
+				  value=""
+				  id="form1Example3"
+				/>
+				<label class="form-check-label" for="form1Example3"> Remember password </label>
+			  </div>
+				-->
+
+						<button on:click={_login} class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+
+						<!--
+			  <hr class="my-4">
+  
+			  <button class="btn btn-lg btn-block btn-primary" style="background-color: #dd4b39;" type="submit"><i class="fab fa-google me-2"></i> Sign in with google</button>
+			  <button class="btn btn-lg btn-block btn-primary mb-2" style="background-color: #3b5998;" type="submit"><i class="fab fa-facebook-f me-2"></i>Sign in with facebook</button>
+			  -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<!--
+	  
 <section class="h-100 gradient-form" style="background-color: #eee;">
 	<div class="container py-5 h-100">
 		<div class="row d-flex justify-content-center align-items-center h-100">
@@ -60,7 +93,7 @@
 										style="width: 185px;"
 										alt="logo"
 									/>
-									<h4 class="mt-1 mb-5 pb-1">We are The Lotus Team</h4>
+									<h4 class="mt-1 mb-5 pb-1">Caritas</h4>
 								</div>
 
 								<form>
@@ -89,7 +122,7 @@
 
 									<div class="text-center pt-1 mb-5 pb-1">
 										<button
-											on:click={login}
+											on:click={_login}
 											class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
 											type="button">Log in</button
 										>
@@ -144,3 +177,4 @@
 		}
 	}
 </style>
+-->

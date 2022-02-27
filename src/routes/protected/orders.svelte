@@ -7,7 +7,7 @@
     import TenantList from "./components/TenantList.svelte";
     import { session } from "$app/stores";
     import OrderList from "./components/OrderList.svelte";
-import Retailer from "./components/Retailer.svelte";
+    import Retailer from "./components/Retailer.svelte";
 
     let orderRequest = undefined;
     let currentTenant = $session.id;
@@ -16,11 +16,12 @@ import Retailer from "./components/Retailer.svelte";
     
     onMount(async () => {
         // orderRequest = await currentRequest();
-        onTenant($session.id);
+        onUser($session.id);
     })
 
     async function reloadData() {
         if (orderRequest) {
+            console.log("Current Tenant", currentTenant)
             orders = await orderForTenantAndRequest(currentTenant, orderRequest._id);
             products = await loadProducts();
             // Filter only right based on the order
@@ -47,7 +48,7 @@ import Retailer from "./components/Retailer.svelte";
         }
     }
 
-    function onTenant(id) {
+    function onUser(id) {
         currentTenant = id;
         reloadData();
     }
@@ -123,7 +124,7 @@ import Retailer from "./components/Retailer.svelte";
                     <td><Retailer id={product.retailer} /></td>
                     <td>{product.price}</td>
                     <td>{product.unity}</td>
-                    <td>{product.quantity}</td>
+                    <td>{product.quantity || ''}</td>
                     <td><input style="width: 100%" on:change={() => { needSave = needsSave() }} type="text" name={product._id} bind:value={product.newQuantity} ></td>
                 </tr>
             {/each}

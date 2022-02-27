@@ -31,10 +31,7 @@
                 </li>
                 {#if $session.role === 'admin'}
                 <li class="nav-item">
-                    <a class="nav-link" href="/protected/admin">Admin</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/protected/tenants">Clienti</a>
+                    <a class="nav-link" href="/protected/users">Utenti</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/protected/retailers">Fornitori</a>
@@ -43,7 +40,10 @@
                     <a class="nav-link" href="/protected/products">Prodotti</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/protected/report-tenant">Report Cliente
+                    <a class="nav-link" href="/protected/order-requests">Ordini</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/protected/report-user">Report Cliente
                     </a>
                 </li>
                 <li class="nav-item">
@@ -52,7 +52,7 @@
                 </li>
                 {/if}
 
-                {#if $session.role === 'tenant'}
+                {#if $session.role === 'user'}
                 <li class="nav-item">
                     <a class="nav-link" href="/protected/orders">Orders</a>
                 </li>

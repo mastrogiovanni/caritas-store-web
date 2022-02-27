@@ -1,27 +1,27 @@
 <script>
-	import { loadTenant, loadTenants } from '../libs/apis.tenant';
+	import { loadUsers } from '../libs/apis.users';
 	import { onMount } from 'svelte';
 
-	export let onTenant = (idTenant) => {};
+	export let onUser = (idTenant) => {};
 
-	let tenants = [];
+	let users = [];
 	let selected = -1;
 
 	onMount(async () => {
-		tenants = await loadTenants();
-		if (tenants?.length > 0) {
+		users = await loadUsers();
+		if (users?.length > 0) {
 			select(0);
 		}
 	});
 
 	function select(index) {
 		selected = index;
-		onTenant(tenants[selected]._id);
+		onUser(users[selected]._id);
 	}
 </script>
 
 <div class="list-group">
-	{#each tenants as tenant, i (tenant._id)}
+	{#each users as tenant, i (tenant._id)}
 		<a
 			on:click|preventDefault={() => select(i)}
 			href="#!"

@@ -47,7 +47,7 @@ import ReportPerTenant from "./components/ReportPerTenant.svelte";
 
 <p />
 
-<TenantList onTenant={(id) => { tenant = id }}></TenantList>
+<TenantList onUser={(id) => { tenant = id }}></TenantList>
 <p/>
 
 <ReportPerTenant idTenant={tenant} idRequest={request}></ReportPerTenant>
