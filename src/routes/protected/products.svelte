@@ -163,7 +163,9 @@
 	];
 </script>
 
+<!--
 <SvelteTable columns="{columns}" rows="{rows}"></SvelteTable>
+-->
 
 <h1>Products</h1>
 
