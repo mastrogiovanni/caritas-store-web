@@ -30,6 +30,8 @@
                 (item.orderType === "all")
             ));
 
+            products = products.filter(item => item.disabled !== "true")
+
             products = products.map(item => {
                 const list = orders.filter(order => order.product === item._id)
                 if (list && list.length > 0) {

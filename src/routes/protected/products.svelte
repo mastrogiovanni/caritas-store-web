@@ -1,11 +1,12 @@
 <script>
 	import Dropzone from 'svelte-file-dropzone';
 	import { onMount } from 'svelte';
-	import { deleteProduct, loadProducts, newProduct } from './libs/apis.products';
+	import { deleteProduct, loadProducts, newProduct, setProductEnabled } from './libs/apis.products';
 	import { slide, fade } from 'svelte/transition';
 	import Retailers from './components/Retailers.svelte';
 	import Retailer from './components/Retailer.svelte';
 	import SvelteTable from 'svelte-table';
+import Switch from './components/Switch.svelte';
 
 	let products = [];
 	let adding = false;
@@ -56,6 +57,7 @@
 		console.log(files.accepted);
 	}
 
+	/*
 	// define some sample data...
 	const rows = [
 		{ id: 1, first_name: 'Marilyn', last_name: 'Monroe', pet: 'dog' },
@@ -161,6 +163,17 @@
 			filterOptions: ['bird', 'cat', 'dog'] // provide array
 		}
 	];
+	*/
+
+	async function enableProduct(id, enabled) {
+		let product = products.find((item) => item._id === id)
+		if (product) {
+			await setProductEnabled(id, enabled);
+			product.disabled = (enabled === "true" ? "false" : "true");
+			product = product;
+			products = products
+		}
+	}
 </script>
 
 <!--
@@ -184,6 +197,8 @@
 
 <!--accept="text/csv"-->
 {#if adding}
+
+	<!--
 	<h1>Upload CSV file and preview same</h1>
 
 	<Dropzone on:drop={handleFilesSelect} multiple={false} accept=".csv">
@@ -197,6 +212,7 @@
 			<p>Upload CSV</p>
 		{/if}
 	</Dropzone>
+	-->
 
 	<form transition:slide>
 		<div class="row">
@@ -307,6 +323,7 @@
 			<th>Prezzo Unitario</th>
 			<th>Unità</th>
 			<th>Tipo Ordine</th>
+			<th>Abilitato</th>
 			<th />
 		</tr>
 	</thead>
@@ -321,6 +338,12 @@
 				<td>{product.price || ''}</td>
 				<td>{product.unity || ''}</td>
 				<td>{product.orderType || ''}</td>
+				<td>
+					<div class="form-check form-switch">
+						<input on:change={(event) => { enableProduct(product._id, event.target.checked) }} class="form-check-input" type="checkbox" id="enabled-{product._id}" checked={product.disabled === "false"}>
+						<label class="form-check-label" for="enabled-{product._id}"></label>
+					</div>
+				</td>
 				<td
 					><button
 						on:click|preventDefault={() => {

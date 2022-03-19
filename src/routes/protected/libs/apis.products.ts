@@ -1,5 +1,16 @@
 import { API_ENDPOINT } from "./config";
 
+export async function setProductEnabled(id, enabled) {
+    const response = await fetch(API_ENDPOINT + '/product/' + id + '/enabled/' + enabled, {
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: 'PUT',
+    });
+    return response.json();
+}
+
 export async function loadProducts() {
     const response = await fetch(API_ENDPOINT + '/product');
     return await response.json();
